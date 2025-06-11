@@ -1,5 +1,3 @@
-Claro! Aqui está um exemplo de `README.md` para o seu repositório GitHub, com todas as instruções e explicações necessárias:
-
 ---
 
 # 🛠️ Ambiente Local com LocalStack e Step Functions
