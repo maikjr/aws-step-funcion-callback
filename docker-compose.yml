@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  localstack-state-machine:
+    image: localstack/localstack:latest
+    container_name: localstack-dev
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=lambda,stepfunctions,iam,logs
+      - LAMBDA_EXECUTOR=docker
+      - DEFAULT_REGION=us-east-1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - ./setup-localstack:/etc/localstack/init/ready.d
+      - ./lambdas:/tmp/lambdas
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  callback-lambda:
+    build: ./lambdas/callback
+    container_name: callback-lambda
+    entrypoint: ["node", "index.js"]
+
+  post-callback-lambda:
+    build: ./lambdas/post-callback
+    container_name: post-callback-lambda
+    entrypoint: ["node", "index.js"]

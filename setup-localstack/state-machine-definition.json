@@ -1,0 +1,30 @@
+{
+  "Comment": "StepFunction com espera e pós-execução",
+  "StartAt": "EsperarCallback",
+  "States": {
+    "EsperarCallback": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
+      "Parameters": {
+        "FunctionName": "callback-lambda",
+        "Payload": {
+          "taskToken.$": "$$.Task.Token",
+          "input.$": "$"
+        }
+      },
+      "Next": "ExecutarDepois"
+    },
+    "ExecutarDepois": {
+      "Type": "Task",
+      "Parameters": {
+        "InputOriginalDaExecucao.$": "$$.Execution.Input",
+        "DadosDoCallback.$": "$"
+      },
+      "Resource": "arn:aws:lambda:us-east-1:000000000000:function:post-callback-lambda",
+      "Next": "Finalizar"
+    },
+    "Finalizar": {
+      "Type": "Succeed"
+    }
+  }
+}
